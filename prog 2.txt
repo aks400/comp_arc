@@ -1,0 +1,33 @@
+def to_8bit_binary(n):
+    """Convert an integer to 8-bit two's complement."""
+    return format(n & 0xFF, '08b')
+
+
+def signed_value(binary):
+    """Convert an 8-bit two's complement value to decimal."""
+    value = int(binary, 2)
+    if value & 0x80:
+        value -= 256
+    return value
+
+
+def add_8bit(a, b):
+    bin_a = to_8bit_binary(a)
+    bin_b = to_8bit_binary(b)
+
+    unsigned_sum = int(bin_a, 2) + int(bin_b, 2)
+    result_binary = format(unsigned_sum & 0xFF, '08b')
+    result_decimal = signed_value(result_binary)
+
+    # Overflow occurs when operand signs match
+    # but the result sign differs.
+    overflow = (
+        (a >= 0) == (b >= 0)
+        and (result_decimal >= 0) != (a >= 0)
+    )
+
+    print(f"\nExpression: ({a}) + ({b})")
+    print(f"Operand A : {bin_a} ({a})")
+    print(f"Operand B : {bin_b} ({b})")
+    print(f"Binary sum: {bin(unsigned_sum)[2:]}")
+    print(f"8-bit result: {result_binary}")
